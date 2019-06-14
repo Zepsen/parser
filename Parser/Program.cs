@@ -50,16 +50,22 @@ namespace Parser
             {
                 Console.WriteLine("Page #" + i);
                 Console.WriteLine();
-                
-                doc = web.Load(url + "/" + i); // try to avoid first time
 
-                var nodes = doc.DocumentNode.SelectNodes(
-                    "//*[@id=\"maincontent\"]/div/div/div[3]/section/ul/li/div/div/a");
+                // try to avoid first time
+                doc = web.Load(url + "/" + i); 
 
+                // Get attributes with anchor
+                var nodes = doc.DocumentNode.SelectNodes("//*[@id=\"maincontent\"]/div/div/div[3]/section/ul/li/div/div/a");
 
+                // Get id from attribute
                 foreach (var node in nodes)
                 {
-                    Console.WriteLine(node.Attributes.FirstOrDefault()?.Value ?? "not found");
+                    var id = node.Attributes.FirstOrDefault()?.Value.Split("/").LastOrDefault() ?? "not found";
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(id);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Test2(id);
+
                 }
 
                 Console.WriteLine();
@@ -70,11 +76,11 @@ namespace Parser
         /// <summary>
         /// Html agility pack
         /// </summary>
-        private static void Test2()
+        private static void Test2(string id)
         {
             try
             {
-                string Url = "https://www.xing.com/profile/Kira_Wolf5";
+                string Url = "https://www.xing.com/profile/" + id;
                 HtmlWeb web = new HtmlWeb();
                 HtmlDocument doc = web.Load(Url);
 
@@ -94,33 +100,36 @@ namespace Parser
         {
             Console.WriteLine("Educations is:");
             var all = doc.DocumentNode.SelectNodes("//*[@id=\"maincontent\"]/div/div/div[2]/div/div[3]/ul/li/div[2]/div");
-            foreach (var ed in all)
+            if (all != null)
             {
-                if (ed.GetClasses().Contains("Educations-dateRange"))
+                foreach (var ed in all)
                 {
-                    Console.WriteLine("date: " + ed.InnerText.Trim());
-                }
+                    if (ed.GetClasses().Contains("Educations-dateRange"))
+                    {
+                        Console.WriteLine("date: " + ed.InnerText.Trim());
+                    }
 
-                else if (ed.GetClasses().Contains("Educations-schoolName"))
-                {
-                    Console.WriteLine("school: " + ed.InnerText.Trim());
-                }
+                    else if (ed.GetClasses().Contains("Educations-schoolName"))
+                    {
+                        Console.WriteLine("school: " + ed.InnerText.Trim());
+                    }
 
-                else if (ed.GetClasses().Contains("Educations-notes"))
-                {
-                    Console.WriteLine("notes: " + ed.InnerText.Trim());
-                    Console.WriteLine();
+                    else if (ed.GetClasses().Contains("Educations-notes"))
+                    {
+                        Console.WriteLine("notes: " + ed.InnerText.Trim());
+                        Console.WriteLine();
+                    }
                 }
-            }
-
+            } else Console.WriteLine("No educations");
+            
             Console.WriteLine(new string('-', 50));
         }
 
         private static void GetName(HtmlDocument doc)
         {
-            var res = doc.DocumentNode.SelectSingleNode("//*[@id=\"person\"]/div/div[1]/div[2]/div[2]/div[1]/h1");
             Console.WriteLine("Name is:");
-            Console.WriteLine(res.InnerHtml.Trim());
+            var res = doc.DocumentNode.SelectSingleNode("//*[@id=\"person\"]/div/div[1]/div[2]/div[2]/div[1]/h1");
+            Console.WriteLine(res != null ? res.InnerHtml.Trim() : "No name");
             Console.WriteLine(new string('-', 50));
         }
 
@@ -129,12 +138,15 @@ namespace Parser
             var langs = doc.DocumentNode.SelectNodes(
                 "//*[@id=\"maincontent\"]/div/div/div[2]/div/div[4]/ul/li/div");
 
-            Console.WriteLine("Languages is:");
-            foreach (var s in langs.Select(i => i.GetDirectInnerText().Trim()))
+            if (langs != null)
             {
-                if (!string.IsNullOrEmpty(s))
-                    Console.WriteLine(s);
-            }
+                Console.WriteLine("Languages is:");
+                foreach (var s in langs.Select(i => i.GetDirectInnerText().Trim()))
+                {
+                    if (!string.IsNullOrEmpty(s))
+                        Console.WriteLine(s);
+                }
+            } else Console.WriteLine("No langs");
 
             Console.WriteLine(new string('-', 50));
         }
