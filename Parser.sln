@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{A35AC16A-AF9B-4B3D-A552-F7654DCC1813}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parser", "Parser\Parser.csproj", "{A35AC16A-AF9B-4B3D-A552-F7654DCC1813}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{0EFC37F1-86C4-426F-B860-9BD3499470D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A35AC16A-AF9B-4B3D-A552-F7654DCC1813}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A35AC16A-AF9B-4B3D-A552-F7654DCC1813}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A35AC16A-AF9B-4B3D-A552-F7654DCC1813}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EFC37F1-86C4-426F-B860-9BD3499470D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EFC37F1-86C4-426F-B860-9BD3499470D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EFC37F1-86C4-426F-B860-9BD3499470D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EFC37F1-86C4-426F-B860-9BD3499470D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
