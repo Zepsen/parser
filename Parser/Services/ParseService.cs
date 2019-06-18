@@ -19,7 +19,9 @@ namespace Parser.Services
             try
             {
                 await _web.LoadFromWebAsync(ParserHelper.Lang);
-                while (true)
+                
+                // todo: dunno how to end loops?
+                while (true) 
                 {
                     var let = ParserHelper.GetNextChar();
                     var url = ParserHelper.PeopleUrl + let + "/1/";
@@ -129,12 +131,9 @@ namespace Parser.Services
             foreach (var ed in all)
             {
                 var education = new Education();
-                education.Date = ed.ChildNodes.FirstOrDefault(i => i.HasClass("Educations-dateRange"))?.InnerText
-                    .Trim();
-                education.School = ed.ChildNodes.FirstOrDefault(i => i.HasClass("Educations-schoolName"))?.InnerText
-                    .Trim();
-                education.Notes = ed.ChildNodes.FirstOrDefault(i => i.HasClass("Educations-notes"))?.InnerText
-                    .Trim();
+                education.Date = ed.ChildNodes.FirstOrDefault(i => i.HasClass("Educations-dateRange"))?.InnerText.Trim();
+                education.School = ed.ChildNodes.FirstOrDefault(i => i.HasClass("Educations-schoolName"))?.InnerText.Trim();
+                education.Notes = ed.ChildNodes.FirstOrDefault(i => i.HasClass("Educations-notes"))?.InnerText.Trim();
                 list.Add(education);
             }
 
@@ -150,10 +149,8 @@ namespace Parser.Services
             foreach (var ed in workNodes)
             {
                 var work = new Work();
-                work.Date = ed.ChildNodes.FirstOrDefault(i => i.HasClass("WorkExperience-dateRange"))?.InnerText
-                    .Trim();
-                work.Title = ed.ChildNodes.FirstOrDefault(i => i.HasClass("WorkExperience-jobTitle"))?.InnerText
-                    .Trim();
+                work.Date = ed.ChildNodes.FirstOrDefault(i => i.HasClass("WorkExperience-dateRange"))?.InnerText.Trim();
+                work.Title = ed.ChildNodes.FirstOrDefault(i => i.HasClass("WorkExperience-jobTitle"))?.InnerText.Trim();
                 works.Add(work);
             }
 
@@ -178,10 +175,8 @@ namespace Parser.Services
             var jobNode = doc.DocumentNode.SelectSingleNode("//*[contains(@class,'ProfilesvCard-jobDetail')]");
             var job = new JobModel();
             if (jobNode == null) return job;
-            job.Title = jobNode.ChildNodes.FirstOrDefault(i => i.HasClass("ProfilesvCard-jobTitle"))?.InnerText
-                .Trim();
-            job.Status = jobNode.ChildNodes.FirstOrDefault(i => i.HasClass("ProfilesvCard-employmentStatus"))
-                ?.GetDirectInnerText().Trim();
+            job.Title = jobNode.ChildNodes.FirstOrDefault(i => i.HasClass("ProfilesvCard-jobTitle"))?.InnerText.Trim();
+            job.Status = jobNode.ChildNodes.FirstOrDefault(i => i.HasClass("ProfilesvCard-employmentStatus"))?.GetDirectInnerText().Trim();
 
             return job;
         }
