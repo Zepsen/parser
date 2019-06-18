@@ -31,8 +31,9 @@ namespace DAL.Repositories
         {
             if (model.CurrentJob != null)
             {
-                var job = await db.Jobs.AsNoTracking()
-                        .FirstOrDefaultAsync(i => i.PersonId == model.Id);
+                var job = await db.Jobs
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(i => i.PersonId == model.Id);
 
                 if (job != null)
                 {

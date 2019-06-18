@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using DAL.DTO;
 using DAL.Repositories;
@@ -11,8 +14,24 @@ namespace Parser.Services
 {
     public class ParseService
     {
-        private readonly HtmlWeb _web = new HtmlWeb();
+        private readonly HtmlWeb _web = new HtmlWeb()
+        {
+            UseCookies = true,
+            OverrideEncoding = Encoding.Default,
+        };
+
         private readonly PersonRepo _personRepo = new PersonRepo();
+
+        //public ParseService()
+        //{
+        //    HttpClient hc = new HttpClient();
+        //    HttpResponseMessage resultLogin = await hc.PostAsync(urlLogin, new StringContent("login=myUserName&password=myPaswordValue", Encoding.UTF8, "application/x-www-form-urlencoded"));
+        //    HttpResponseMessage resultPlaylist = await hc.GetAsync(urlData);
+        //    Stream stream = await resultPlaylist.Content.ReadAsStreamAsync();
+        //    HtmlDocument doc = new HtmlDocument();
+        //    doc.Load(stream);
+        //    string webContent = doc.DocumentNode.InnerHtml;
+        //}
 
         public async Task Run()
         {
@@ -89,7 +108,7 @@ namespace Parser.Services
             try
             {
                 var url = "https://www.xing.com/profile/" + profile.Id;
-
+                
                 var doc = _web.Load(url);
 
                 profile.Name = GetName(doc);
