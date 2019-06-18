@@ -195,7 +195,7 @@ namespace BLL.Services
 
         private List<string> GetHaves(HtmlDocument doc)
         {
-            var nodes = doc.GetElementbyId(ParserHelper.InterestsId)?.SelectNodes(".//li/span");
+            var nodes = doc.GetElementbyId(ParserHelper.HavesId)?.SelectNodes(".//li/span");
             return nodes != null ? nodes.Select(i => i.GetDirectInnerText().Trim()).ToList() : new List<string>();
         }
     }
