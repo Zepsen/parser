@@ -8,7 +8,7 @@ using DAL.DTO;
 using DAL.Repositories;
 using HtmlAgilityPack;
 
-namespace Parser.Services
+namespace BLL.Services
 {
     public class ParseService
     {
@@ -24,7 +24,6 @@ namespace Parser.Services
         {
             try
             {
-                // await _web.LoadFromWebAsync(ParserHelper.Lang);
                 // todo: dunno how to end loops?
                 while (true) 
                 {

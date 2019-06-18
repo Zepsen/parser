@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Parser.Services;
+using BLL.Services;
 
 namespace Parser
 {
@@ -9,10 +9,6 @@ namespace Parser
         {
             var parser = new ParseService();
             await parser.Run();
-
-            //var model = new ProfileModel() { Id = "Ricardo_Delgado13", Link = "https://www.xing.com/profile/Giovanni_Marziale" };
-            //parser.ParseProfile(model);
-            //Console.WriteLine(model.ToString());
         }
     }
 }
