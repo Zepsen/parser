@@ -21,18 +21,7 @@ namespace Parser.Services
         };
 
         private readonly PersonRepo _personRepo = new PersonRepo();
-
-        //public ParseService()
-        //{
-        //    HttpClient hc = new HttpClient();
-        //    HttpResponseMessage resultLogin = await hc.PostAsync(urlLogin, new StringContent("login=myUserName&password=myPaswordValue", Encoding.UTF8, "application/x-www-form-urlencoded"));
-        //    HttpResponseMessage resultPlaylist = await hc.GetAsync(urlData);
-        //    Stream stream = await resultPlaylist.Content.ReadAsStreamAsync();
-        //    HtmlDocument doc = new HtmlDocument();
-        //    doc.Load(stream);
-        //    string webContent = doc.DocumentNode.InnerHtml;
-        //}
-
+        
         public async Task Run()
         {
             try
@@ -58,12 +47,10 @@ namespace Parser.Services
         {
             var doc = await _web.LoadFromWebAsync(url + "1/");
             var total = GetTotalPaginate(doc);
-            Console.WriteLine(url);
-
+            
             for (var i = 1; i <= total; i++)
             {
                 Console.WriteLine("Page #" + i);
-
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(url + "/" + i);
                 Console.ForegroundColor = ConsoleColor.Red;

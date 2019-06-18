@@ -14,12 +14,10 @@ namespace DAL.Repositories
             using (var db = new AppContext())
             {
                 await UpsertPerson(db, profile);
-
-                await UpdateJob(db, profile);
+                await UpsertJob(db, profile);
 
                 await UpdateEducationExp(db, profile);
                 await UpdateWorkExp(db, profile);
-
                 await UpdateHaves(db, profile);
                 await UpdateInterests(db, profile);
                 await UpdateLanguages(db, profile);
@@ -27,34 +25,43 @@ namespace DAL.Repositories
             }
         }
 
-        private async Task UpdateJob(AppContext db, ProfileModel model)
+        private async Task UpsertJob(AppContext db, ProfileModel model)
         {
             if (model.CurrentJob != null)
             {
-                var job = await db.Jobs
-                    .AsNoTracking()
+                var job = await db.Jobs.AsNoTracking()
                     .FirstOrDefaultAsync(i => i.PersonId == model.Id);
 
                 if (job != null)
                 {
-                    job.Title = model.CurrentJob.Title;
-                    job.Status = model.CurrentJob.Status;
-
-                    db.Jobs.Update(job);
+                    UpdateJob(db, model, job);
                 }
                 else
                 {
-                    var newJob = new Job
-                    {
-                        Title = model.CurrentJob.Title,
-                        Status = model.CurrentJob.Status,
-                    };
-
-                    await db.Jobs.AddAsync(newJob);
+                    await InsertNewJob(db, model);
                 }
 
-                await db.SaveChangesAsync(); 
+                await db.SaveChangesAsync();
             }
+        }
+
+        private static async Task InsertNewJob(AppContext db, ProfileModel model)
+        {
+            var newJob = new Job
+            {
+                Title = model.CurrentJob.Title,
+                Status = model.CurrentJob.Status,
+            };
+
+            await db.Jobs.AddAsync(newJob);
+        }
+
+        private static void UpdateJob(AppContext db, ProfileModel model, Job job)
+        {
+            job.Title = model.CurrentJob.Title;
+            job.Status = model.CurrentJob.Status;
+
+            db.Jobs.Update(job);
         }
 
         private async Task UpdateWorkExp(AppContext db, ProfileModel model)
@@ -63,8 +70,8 @@ namespace DAL.Repositories
             {
                 var works = await db.Works.AsNoTracking()
                     .Where(i => i.PersonId == model.Id).ToListAsync();
-                
-                if(works.Any()) db.Works.RemoveRange(works);
+
+                if (works.Any()) db.Works.RemoveRange(works);
                 await db.Works.AddRangeAsync(model.Works.Select(w => new Models.Work
                 {
                     Title = w.Title,
@@ -159,7 +166,6 @@ namespace DAL.Repositories
                 .Where(i => model.Interests.Contains(i.Title)).Select(i => i.Id).ToListAsync();
 
             var personInterests = await db.PersonInterests.Where(i => i.PersonId == model.Id).ToListAsync();
-            //db.PersonInterests.RemoveRange(personInterests);
             ids = ids.Except(personInterests.Select(i => i.InterestId)).ToList();
             if (ids.Any())
             {
@@ -198,7 +204,6 @@ namespace DAL.Repositories
                 .Where(i => model.Wants.Contains(i.Title)).Select(i => i.Id).ToListAsync();
 
             var personWants = await db.PersonWants.Where(i => i.PersonId == model.Id).ToListAsync();
-            //db.PersonWants.RemoveRange(personWants);
             ids = ids.Except(personWants.Select(i => i.WantId)).ToList();
             if (ids.Any())
             {
@@ -237,11 +242,10 @@ namespace DAL.Repositories
                 .Where(i => model.Haves.Contains(i.Title)).Select(i => i.Id).ToListAsync();
 
             var personHaves = await db.PersonHaves.Where(i => i.PersonId == model.Id).ToListAsync();
-            //db.PersonHaves.RemoveRange(personHaves);
             ids = ids.Except(personHaves.Select(i => i.HaveId)).ToList();
             if (ids.Any())
             {
-                await db.PersonHaves.AddRangeAsync(ids.Select(i => new PersonHave()
+                await db.PersonHaves.AddRangeAsync(ids.Select(i => new PersonHave
                 { HaveId = i, PersonId = model.Id }));
 
                 await db.SaveChangesAsync();
@@ -276,7 +280,6 @@ namespace DAL.Repositories
                 .Where(i => model.Languages.Contains(i.Title)).Select(i => i.Id).ToListAsync();
 
             var personLanguages = await db.PersonLanguages.Where(i => i.PersonId == model.Id).ToListAsync();
-            //db.PersonLanguages.RemoveRange(personLanguages);
             ids = ids.Except(personLanguages.Select(i => i.LanguageId)).ToList();
             if (ids.Any())
             {
