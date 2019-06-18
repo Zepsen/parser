@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Parser.Models;
 using Parser.Services;
 
 namespace Parser

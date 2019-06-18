@@ -3,14 +3,16 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppContext))]
-    partial class AppContextModelSnapshot : ModelSnapshot
+    [Migration("20190618082957_m2m")]
+    partial class m2m
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +85,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("HaveId");
 
-                    b.ToTable("PersonHaves");
+                    b.ToTable("PersonHave");
                 });
 
             modelBuilder.Entity("DAL.Models.PersonInterest", b =>
@@ -96,7 +98,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("InterestId");
 
-                    b.ToTable("PersonInterests");
+                    b.ToTable("PersonInterest");
                 });
 
             modelBuilder.Entity("DAL.Models.PersonLanguage", b =>
@@ -109,7 +111,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("PersonLanguages");
+                    b.ToTable("PersonLanguage");
                 });
 
             modelBuilder.Entity("DAL.Models.PersonWant", b =>
@@ -122,7 +124,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("WantId");
 
-                    b.ToTable("PersonWants");
+                    b.ToTable("PersonWant");
                 });
 
             modelBuilder.Entity("DAL.Models.Want", b =>

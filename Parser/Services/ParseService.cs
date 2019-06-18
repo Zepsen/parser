@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using DAL.DTO;
 using DAL.Repositories;
 using HtmlAgilityPack;
-using Parser.Models;
 
 namespace Parser.Services
 {
@@ -65,7 +65,7 @@ namespace Parser.Services
                     Console.ForegroundColor = ConsoleColor.Red;
 
                     var model = new ProfileModel() { Id = id, Link = link };
-                    ParseProfile(model);
+                    await ParseProfile(model);
 
                     Console.WriteLine(model.ToString());
                 }
@@ -86,7 +86,7 @@ namespace Parser.Services
         }
 
 
-        public void ParseProfile(ProfileModel profile)
+        public async Task ParseProfile(ProfileModel profile)
         {
             try
             {
@@ -103,6 +103,8 @@ namespace Parser.Services
                 profile.Interests = GetInterests(doc);
                 profile.Wants = GetWants(doc);
                 profile.Haves = GetHaves(doc);
+
+                await _personRepo.UpsertProfile(profile);
             }
             catch (WebException webEx)
             {
