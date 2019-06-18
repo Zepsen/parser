@@ -11,12 +11,15 @@ namespace DAL.DTO
         public string Photo { get; set; }
         
         public List<string> Languages { get; set; }
-        public List<Education> Educations { get; set; }
-        public JobModel CurrentJob { get; set; }
-        public List<Work> Works { get; set; }
         public List<string> Interests { get; set; }
         public List<string> Wants { get; set; }
         public List<string> Haves { get; set; }
+
+
+        public List<Education> Educations { get; set; }
+        public JobModel CurrentJob { get; set; }
+        public List<Work> Works { get; set; }
+        
 
 
         public override string ToString()

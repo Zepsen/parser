@@ -10,6 +10,10 @@ namespace DAL
         public DbSet<Want> Wants { get; set; }
         public DbSet<Have> Haves { get; set; }
         public DbSet<Interest> Interests { get; set; }
+        public DbSet<Job> Jobs { get; set; }
+
+        public DbSet<Education> Educations { get; set; }
+        public DbSet<Work> Works { get; set; }
 
         public DbSet<PersonHave> PersonHaves { get; set; }
         public DbSet<PersonInterest> PersonInterests { get; set; }
@@ -23,6 +27,24 @@ namespace DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // 1t1
+            modelBuilder.Entity<Person>()
+                .HasOne(i => i.CurrentJob)
+                .WithOne(i => i.Person)
+                .HasForeignKey<Job>(i => i.PersonId);
+
+            // 1t*
+            modelBuilder.Entity<Person>()
+                .HasMany(i => i.Educations)
+                .WithOne(i => i.Person)
+                .HasForeignKey(i => i.PersonId);
+
+            modelBuilder.Entity<Person>()
+                .HasMany(i => i.Works)
+                .WithOne(i => i.Person)
+                .HasForeignKey(i => i.PersonId);
+
+            // *t*
             modelBuilder.Entity<PersonLanguage>()
                 .HasKey(bc => new { bc.PersonId, bc.LanguageId });
 
