@@ -62,10 +62,6 @@ namespace Parser.Services
 
                     var id = link.Split("/").LastOrDefault();
 
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(id);
-                    Console.ForegroundColor = ConsoleColor.Red;
-
                     var model = new ProfileModel() { Id = id, Link = link };
                     await ParseProfile(model);
 
