@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.DTO;
@@ -26,13 +24,13 @@ namespace Parser.Services
         {
             try
             {
-                await _web.LoadFromWebAsync(ParserHelper.Lang);
+                //await _web.LoadFromWebAsync(ParserHelper.Lang);
                 
                 // todo: dunno how to end loops?
                 while (true) 
                 {
                     var let = ParserHelper.GetNextChar();
-                    var url = ParserHelper.PeopleUrl + let + "/1/";
+                    var url = $"{ParserHelper.PeopleUrl}{let}/1/";
                     await ParseProfilesPaginationPage(url);
                 }
             }
@@ -57,25 +55,29 @@ namespace Parser.Services
 
                 doc = _web.Load(url + "/" + i);
 
-                // Get attributes with anchor
                 var nodes = doc.DocumentNode.SelectNodes("//*[contains(@class,'Card-link see-more')]");
 
-                // Get id from attribute
                 foreach (var node in nodes)
                 {
-                    var link = node.Attributes.FirstOrDefault(j => j.Name == "href")?.Value;
-                    if (link == null) continue;
-
-                    var id = link.Split("/").LastOrDefault();
-
-                    var model = new ProfileModel() { Id = id, Link = link };
-                    await ParseProfile(model);
-
-                    Console.WriteLine(model.ToString());
+                    await ParseProfilesAttributes(node);
                 }
 
                 Console.WriteLine();
             }
+        }
+
+        private async Task ParseProfilesAttributes(HtmlNode node)
+        {
+            var link = node.Attributes.FirstOrDefault(j => j.Name == "href")?.Value;
+            if (link == null) return;
+
+            var id = link.Split("/").LastOrDefault();
+
+            var model = new ProfileModel() {Id = id, Link = link};
+            await ParseProfile(model);
+
+            // For test
+            Console.WriteLine(model.ToString());
         }
 
         private static int GetTotalPaginate(HtmlDocument doc)
@@ -94,9 +96,8 @@ namespace Parser.Services
         {
             try
             {
-                var url = "https://www.xing.com/profile/" + profile.Id;
-                
-                var doc = _web.Load(url);
+                var url = ParserHelper.ProfileUrl + profile.Id;
+                var doc = await _web.LoadFromWebAsync(url);
 
                 profile.Name = GetName(doc);
                 profile.Photo = GetPhoto(doc);
@@ -161,7 +162,6 @@ namespace Parser.Services
 
         private string GetName(HtmlDocument doc)
         {
-
             var res = doc.DocumentNode.SelectSingleNode("//*[contains(@class,'fn ProfilesvCard-userName')]");
             return res != null ? res.InnerHtml.Trim() : "NoName";
         }
@@ -185,19 +185,19 @@ namespace Parser.Services
 
         private List<string> GetInterests(HtmlDocument doc)
         {
-            var nodes = doc.GetElementbyId("interests")?.SelectNodes(".//li/span");
+            var nodes = doc.GetElementbyId(ParserHelper.InterestsId)?.SelectNodes(".//li/span");
             return nodes != null ? nodes.Select(i => i.GetDirectInnerText().Trim()).ToList() : new List<string>();
         }
 
         private List<string> GetWants(HtmlDocument doc)
         {
-            var nodes = doc.GetElementbyId("wants")?.SelectNodes(".//li/span");
+            var nodes = doc.GetElementbyId(ParserHelper.WantsId)?.SelectNodes(".//li/span");
             return nodes != null ? nodes.Select(i => i.GetDirectInnerText().Trim()).ToList() : new List<string>();
         }
 
         private List<string> GetHaves(HtmlDocument doc)
         {
-            var nodes = doc.GetElementbyId("haves")?.SelectNodes(".//li/span");
+            var nodes = doc.GetElementbyId(ParserHelper.InterestsId)?.SelectNodes(".//li/span");
             return nodes != null ? nodes.Select(i => i.GetDirectInnerText().Trim()).ToList() : new List<string>();
         }
     }
