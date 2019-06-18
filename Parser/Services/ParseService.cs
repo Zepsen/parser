@@ -24,8 +24,7 @@ namespace Parser.Services
         {
             try
             {
-                //await _web.LoadFromWebAsync(ParserHelper.Lang);
-                
+                // await _web.LoadFromWebAsync(ParserHelper.Lang);
                 // todo: dunno how to end loops?
                 while (true) 
                 {
@@ -163,7 +162,7 @@ namespace Parser.Services
         private string GetName(HtmlDocument doc)
         {
             var res = doc.DocumentNode.SelectSingleNode("//*[contains(@class,'fn ProfilesvCard-userName')]");
-            return res != null ? res.InnerHtml.Trim() : "NoName";
+            return res != null ? res.InnerHtml.Trim() : "John Doe";
         }
 
         private List<string> GetLangs(HtmlDocument doc)
